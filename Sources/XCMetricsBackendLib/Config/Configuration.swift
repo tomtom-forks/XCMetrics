@@ -20,6 +20,7 @@
 import Foundation
 import Vapor
 import NIO
+import NIOSSL
 
 class Configuration {
 
@@ -142,5 +143,26 @@ class Configuration {
     /// Use the name listed in the `region` column [here](https://docs.aws.amazon.com/general/latest/gr/s3.html)
     lazy var s3Region: String? = {
         return Environment.get("XCMETRICS_S3_REGION")
+    }()
+
+    /// Path to an SSL/TLS certificate in PEM format
+    /// Defaults to `nil`
+    lazy var tlsCertificate: String? = Environment.get("TLS_CERTIFICATE")
+
+    /// Path to an SSL/TLS private key
+    /// Defaults to `nil`
+    lazy var tlsPrivateKey: String? = Environment.get("TLS_PRIVATE_KEY")
+
+    /// Control TLS certificate verification. Possible values: `full`, `no-hostname`, `none`
+    /// Defaults to `full`
+    lazy var certificateVerification: CertificateVerification = {
+        switch Environment.get("CERTIFICATE_VERIFICATION") {
+        case "no-hostname":
+            return .noHostnameVerification
+        case "none":
+            return .none
+        default:
+            return .fullVerification
+        }
     }()
 }

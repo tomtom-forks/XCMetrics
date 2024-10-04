@@ -22,6 +22,7 @@ import FluentPostgresDriver
 import QueuesRedisDriver
 import Redis
 import Vapor
+import NIOSSL
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -29,6 +30,20 @@ public func configure(_ app: Application) throws {
     let config = Configuration()
     // Enable gzip support
     app.http.server.configuration.requestDecompression = .enabled(limit: .none)
+
+    // TLS Configuration
+    if let tlsCertificate = config.tlsCertificate,
+       let tlsPrivateKey = config.tlsPrivateKey {
+        let serverTLSConfiguration: TLSConfiguration = .makeServerConfiguration(
+            certificateChain: try NIOSSLCertificate.fromPEMFile(tlsCertificate).map { .certificate($0) },
+            privateKey: .privateKey(try .init(file: tlsPrivateKey, format: .pem))
+        )
+
+        app.http.server.configuration.tlsConfiguration = serverTLSConfiguration
+
+        app.http.client.configuration.tlsConfiguration = .makeClientConfiguration()
+        app.http.client.configuration.tlsConfiguration?.certificateVerification = config.certificateVerification
+    }
 
     // Database configuration
     if config.useCloudSQLSocket {
@@ -49,12 +64,16 @@ public func configure(_ app: Application) throws {
 
         app.logger.notice("Connecting to \(config.databaseName) in \(config.databaseHost) as \(config.databaseUser) password length \(config.databasePassword.count)")
 
+        var postgresTLSConfiguration: TLSConfiguration = .makeClientConfiguration()
+        postgresTLSConfiguration.certificateVerification = config.certificateVerification
+
         app.databases.use(.postgres(
             hostname: config.databaseHost,
             port: config.databasePort,
             username: config.databaseUser,
             password: config.databasePassword,
             database: config.databaseName,
+            tlsConfiguration: postgresTLSConfiguration,
             maxConnectionsPerEventLoop: 10
         ), as: .psql)
     }
