@@ -154,15 +154,15 @@ class Configuration {
     lazy var tlsPrivateKey: String? = Environment.get("TLS_PRIVATE_KEY")
 
     /// Control TLS certificate verification. Possible values: `full`, `no-hostname`, `none`
-    /// Defaults to `full`
+    /// Defaults to `none`
     lazy var certificateVerification: CertificateVerification = {
         switch Environment.get("CERTIFICATE_VERIFICATION") {
+        case "full":
+            return .fullVerification
         case "no-hostname":
             return .noHostnameVerification
-        case "none":
-            return .none
         default:
-            return .fullVerification
+            return .none
         }
     }()
 }
