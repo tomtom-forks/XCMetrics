@@ -64,8 +64,12 @@ public func configure(_ app: Application) throws {
 
         app.logger.notice("Connecting to \(config.databaseName) in \(config.databaseHost) as \(config.databaseUser) password length \(config.databasePassword.count)")
 
-        var postgresTLSConfiguration: TLSConfiguration = .makeClientConfiguration()
-        postgresTLSConfiguration.certificateVerification = config.certificateVerification
+        var postgresTLSConfiguration: TLSConfiguration?
+
+        if config.isPostgresTLSEnabled {
+            postgresTLSConfiguration = .makeClientConfiguration()
+            postgresTLSConfiguration?.certificateVerification = config.certificateVerification
+        }
 
         app.databases.use(.postgres(
             hostname: config.databaseHost,

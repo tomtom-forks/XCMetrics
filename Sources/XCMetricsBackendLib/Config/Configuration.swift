@@ -153,6 +153,10 @@ class Configuration {
     /// Defaults to `nil`
     lazy var tlsPrivateKey: String? = Environment.get("TLS_PRIVATE_KEY")
 
+    /// Enable TLS for PostgreSQL connections 
+    /// Defaults to `false`
+    lazy var isPostgresTLSEnabled: Bool = (Environment.get("POSTGRES_TLS_ENABLED") ?? "0") == "1"
+
     /// Control TLS certificate verification. Possible values: `full`, `no-hostname`, `none`
     /// Defaults to `none`
     lazy var certificateVerification: CertificateVerification = {
