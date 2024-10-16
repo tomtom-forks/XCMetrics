@@ -21,7 +21,8 @@ You can pass the setting of those servers as Environment Variables:
 - **`DB_NAME`** Name of the database. The default value is `xcmetrics-dev`
 - **`TLS_CERTIFICATE`** Local path to a TLS certificate in PEM format. Mount it as a volume. Defaults to `nil`.
 - **`TLS_PRIVATE_KEY`** Local path to a TLS private key in PEM format. Mount it as a volume. Defaults to `nil`.
-- **`CERTIFICATE_VERIFICATION`** Controls TLS certificate verification behavior. Possible values: `full`, `no-hostname`, `none`. Defaults to `full`.
+- **`CERTIFICATE_VERIFICATION`** Controls TLS certificate verification behavior. Possible values: `full`, `no-hostname`, `none`. Defaults to `none`.
+- **`POSTGRES_TLS_ENABLED`** Controls whether TLS is enabled for PostgreSQL connections. Either `1` (true) or `0` (false). Defaults to `0` (false).
 
 *Note:* If you don't pass both the TLS certificate and private key, the application will run with TLS disabled.
 
