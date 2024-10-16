@@ -1,12 +1,12 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.7-focal as build
+FROM swift:5.9-jammy as build
 WORKDIR /build
 
 # Install libraries needed
 RUN apt-get -qq update && apt-get install -y \
-  libssl-dev zlib1g-dev
+  libssl-dev zlib1g-dev libjemalloc-dev
 
 # First just resolve dependencies.
 # This creates a cached layer that can be reused
@@ -18,13 +18,24 @@ RUN swift package resolve
 # Copy entire repo into container
 COPY . .
 
-# Compile with optimizations
-RUN swift build --enable-test-discovery --product XCMetricsBackend -c release
+# Build everything, with optimizations, with static linking, and using jemalloc
+# N.B.: The static version of jemalloc is incompatible with the static Swift runtime.
+RUN swift build --enable-test-discovery --product XCMetricsBackend -c release \
+                --static-swift-stdlib \
+                -Xlinker -ljemalloc
 
 # ================================
 # Run image
 # ================================
-FROM swift:5.7-focal-slim
+FROM swift:5.9-jammy-slim
+
+# Make sure all system packages are up to date, and install only essential packages.
+RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
+    && apt-get -q update \
+    && apt-get -q dist-upgrade -y \
+    && apt-get -q install -y \
+      libjemalloc2 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create a vapor user and group with /app as its home directory
 RUN useradd --user-group --create-home --home-dir /app vapor
