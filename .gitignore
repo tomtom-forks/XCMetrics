@@ -10,3 +10,5 @@ DerivedData/
 
 # Documentation temporary directory
 docs_temp/
+
+.vscode
