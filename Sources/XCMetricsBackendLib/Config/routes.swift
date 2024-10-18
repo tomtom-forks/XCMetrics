@@ -43,7 +43,7 @@ func routes(_ app: Application) throws {
     app.middleware.use(cors)
 
     // Log File Repository
-    let logFileRepository = LogFileRepositoryFactory.makeWithConfiguration(config: config, logger: app.logger)
+    let logFileRepository = LogFileRepositoryFactory.makeWithConfiguration(config: config, logger: app.logger, client: app.client)
 
     // Controllers
     try app.register(collection: BuildController())
