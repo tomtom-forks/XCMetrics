@@ -144,6 +144,18 @@ class Configuration {
     lazy var s3Region: String? = {
         return Environment.get("XCMETRICS_S3_REGION")
     }()
+    
+    /// Use Azure Blob Storage to store the logs.
+    lazy var useABSLogRepository: Bool = (Environment.get("XCMETRICS_USE_AZURE_REPOSITORY") ?? "0") == "1"
+    
+    /// Name of the Azure Storage Account to use to store logs
+    lazy var azureStorageAccount: String? = Environment.get("XCMETRICS_AZURE_STORAGE_ACCOUNT")
+    
+    /// Access Key of an Azure Storage Account with permissions to write and read to a Storage Container
+    lazy var azureStorageAccountAccessKey: String? = Environment.get("AZURE_STORAGE_ACCOUNT_ACCESS_KEY")
+    
+    /// Name of the Azure Storage Container to use to store logs
+    lazy var azureStorageContainer: String? = Environment.get("XCMETRICS_AZURE_STORAGE_CONTAINER")
 
     /// Path to an SSL/TLS certificate in PEM format
     /// Defaults to `nil`
