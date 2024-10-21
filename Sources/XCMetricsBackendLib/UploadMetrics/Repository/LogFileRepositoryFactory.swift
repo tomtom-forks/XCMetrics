@@ -22,7 +22,7 @@ import Vapor
 
 struct LogFileRepositoryFactory {
 
-    static func makeWithConfiguration(config: Configuration, logger: Logger) -> LogFileRepository {
+    static func makeWithConfiguration(config: Configuration, logger: Logger, client: Client) -> LogFileRepository {
         if config.useGCSLogRepository {
             logger.info("Initializing GCS LogFileRepository")
             guard let gcsRepository = LogFileGCSRepository(config: config, logger: logger) else {
@@ -38,6 +38,16 @@ struct LogFileRepositoryFactory {
                     "XCMETRICS_S3_REGION are required when XCMETRICS_USE_S3_REPOSITORY is used")
             }
             return s3Repository
+        }
+        if config.useABSLogRepository {
+            logger.info("Initializing Azure Blob Storage LogFileRepository")
+            guard 
+                let azureShareRepository = LogFileABSRepository(config: config, client: client) 
+            else {
+                preconditionFailure("XCMETRICS_AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_ACCOUNT_ACCESS_KEY and " +
+                    "XCMETRICS_AZURE_STORAGE_CONTAINER are required when XCMETRICS_USE_AZURE_REPOSITORY is used")
+            }
+            return azureShareRepository
         }
         return LocalLogFileRepository()
     }
