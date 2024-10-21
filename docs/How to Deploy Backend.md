@@ -62,7 +62,7 @@ For this to work, you'll need to configure an extra Set of Environment Variables
 
 - **`XCMETRICS_START_JOBS_SAME_INSTANCE`** Should be set to `"0"`. This will instruct the backend to not start the ProcessMetricsJob in the same instance than the Endpoints.
 
-In this configuation, the Controller needs to store the logs in the Cloud, not in disk. So the Jobs can download them from there. XCMetrics supports two Cloud Storage Systems: **Azure Blob Storage**, **Amazon S3** and **Google Cloud Storage**
+In this configuation, the Controller needs to store the logs in the Cloud, not in disk. So the Jobs can download them from there. XCMetrics supports three Cloud Storage Systems: **Azure Blob Storage**, **Amazon S3** and **Google Cloud Storage**
 
 ### Azure Blob Storage
 
