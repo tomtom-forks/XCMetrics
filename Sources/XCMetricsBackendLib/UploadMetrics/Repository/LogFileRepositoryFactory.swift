@@ -24,45 +24,31 @@ struct LogFileRepositoryFactory {
 
     static func makeWithConfiguration(config: Configuration, logger: Logger, client: Client) -> LogFileRepository {
         if config.useGCSLogRepository {
-            logger.info("Initializing GCS Log File Repository")
+            logger.info("Initializing GCS LogFileRepository")
             guard let gcsRepository = LogFileGCSRepository(config: config, logger: logger) else {
-                preconditionFailure("""
-                    GOOGLE_APPLICATION_CREDENTIALS, XCMETRICS_GOOGLE_PROJECT and \
-                    XCMETRICS_GCS_BUCKET are required when XCMETRICS_USE_GCS_REPOSITORY is used
-                    """
-                )
+                preconditionFailure("GOOGLE_APPLICATION_CREDENTIALS, XCMETRICS_GOOGLE_PROJECT and XCMETRICS_GCS_BUCKET are " +
+                    "required when XCMETRICS_USE_GCS_REPOSITORY is used")
             }
             return gcsRepository
         }
-        
         if config.useS3LogRepository {
-            logger.info("Initializing S3 Log File Repository")
-            
+            logger.info("Initializing S3 LogFileRepository")
             guard let s3Repository = LogFileS3Repository(config: config) else {
-                preconditionFailure("""
-                    AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, XCMETRICS_S3_BUCKET and \
-                    XCMETRICS_S3_REGION are required when XCMETRICS_USE_S3_REPOSITORY is used
-                    """
-                )
+                preconditionFailure("AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, XCMETRICS_S3_BUCKET and " +
+                    "XCMETRICS_S3_REGION are required when XCMETRICS_USE_S3_REPOSITORY is used")
             }
-            
             return s3Repository
         }
-        
         if config.useABSLogRepository {
             logger.info("Initializing Azure Blob Storage LogFileRepository")
-            
-            guard let azureShareRepository = LogFileABSRepository(config: config, client: client) else {
-                preconditionFailure("""
-                    XCMETRICS_AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_ACCOUNT_ACCESS_KEY and \
-                    XCMETRICS_AZURE_STORAGE_CONTAINER are required when XCMETRICS_USE_AZURE_REPOSITORY is used
-                    """
-                )
+            guard 
+                let azureShareRepository = LogFileABSRepository(config: config, client: client) 
+            else {
+                preconditionFailure("XCMETRICS_AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_ACCOUNT_ACCESS_KEY and " +
+                    "XCMETRICS_AZURE_STORAGE_CONTAINER are required when XCMETRICS_USE_AZURE_REPOSITORY is used")
             }
-            
             return azureShareRepository
         }
-        
         return LocalLogFileRepository()
     }
 
