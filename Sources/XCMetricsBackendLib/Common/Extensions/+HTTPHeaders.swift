@@ -10,7 +10,7 @@ import Vapor
 
 extension HTTPHeaders {
     public var azureSharedKeyAuthorization: AzureSharedKeyAuthorization? {
-        get { nil } // Not really necessary
+        get { nil } // We'll never need to use this with the current implementation
         set {
             if let authorization = newValue {
                 replaceOrAdd(
