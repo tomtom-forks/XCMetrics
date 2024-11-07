@@ -8,6 +8,8 @@ let package = Package(
     platforms: [
         .macOS(.v13),
     ], products: [
+        .executable(name: "TTXCMetrics", targets: ["TTXCMetricsApp"]),
+        .library(name: "TTXCMetricsClient", targets: ["TTXCMetricsClient"]),
         .executable(name: "XCMetrics", targets: ["XCMetricsApp"]),
         .executable(name: "XCMetricsBackend", targets: ["XCMetricsBackend"]),
         .library(name: "XCMetricsBackendLib", targets: ["XCMetricsBackendLib"]),
@@ -54,6 +56,14 @@ let package = Package(
             ]
         ),
         .target(
+            name: "TTXCMetricsClient",
+            dependencies: ["XCMetricsClient", "XCMetricsPlugins"]
+        ),
+        .executableTarget(
+            name: "TTXCMetricsApp",
+            dependencies: ["TTXCMetricsClient"]
+        ),
+        .target(
             name: "XCMetricsPlugins",
             dependencies: [
                 "XCMetricsClient",
@@ -73,7 +83,7 @@ let package = Package(
                 .product(name: "NIOHTTP2", package: "swift-nio-http2")
             ]
         ),
-        .target(
+        .executableTarget(
             name: "XCMetricsApp",
             dependencies: ["XCMetricsClient"]
         ),
@@ -103,7 +113,7 @@ let package = Package(
                 .unsafeFlags(["-cross-module-optimization"], .when(configuration: .release))
             ]
         ),
-        .target(name: "XCMetricsBackend", dependencies: [.target(name: "XCMetricsBackendLib")]),
+        .executableTarget(name: "XCMetricsBackend", dependencies: [.target(name: "XCMetricsBackendLib")]),
         .testTarget(
             name: "XCMetricsTests",
             dependencies: [

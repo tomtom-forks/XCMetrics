@@ -15,6 +15,15 @@ One of the pre-requisites is to get a binary release of XCMetrics directly from 
 
 >If you're downloading a pre-built executable version of XCMetrics, you can skip the following section.
 
+#### Compile TomTom's TTXCMetrics Executable
+In a terminal window inside the `XCMetrics` repo, run the following:
+
+```shell
+swift build --product TTXCMetrics -c release
+```
+
+An executable named `TTXCMetrics` will be placed inside `.build/release/TTXCMetrics`. This is the executable that manages the metrics collection for you.
+
 #### Compile XCMetrics Executable
 In a terminal window inside the `XCMetrics` repo, run the following:
 

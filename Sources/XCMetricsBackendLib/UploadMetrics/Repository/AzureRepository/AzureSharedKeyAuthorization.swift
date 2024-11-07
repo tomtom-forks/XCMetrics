@@ -1,10 +1,3 @@
-//
-//  AzureSharedKeyAuthorization.swift
-//
-//
-//  Created by Diego Otero Díaz on 18/10/24.
-//
-
 import CryptoSwift
 import Foundation
 import Vapor
