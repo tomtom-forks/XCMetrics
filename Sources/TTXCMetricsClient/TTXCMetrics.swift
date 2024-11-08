@@ -7,6 +7,7 @@ public struct TTXCMetrics {
     let metrics = XCMetrics.parseOrExit()
     let configuration = XCMetricsConfiguration()
     configuration.add(plugin: ThermalThrottlingPlugin().create())
+    configuration.add(plugin: LoadAveragePlugin().create())
 
     // The git directory is usually Xcode's `$SRCROOT` environment variable
     let gitDirectory: String? = ProcessInfo.processInfo.environment["SRCROOT"]
