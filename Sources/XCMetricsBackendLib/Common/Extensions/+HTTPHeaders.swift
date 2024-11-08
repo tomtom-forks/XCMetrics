@@ -1,10 +1,3 @@
-//
-//  +HTTPHeaders.swift
-//
-//
-//  Created by Diego Otero Díaz on 18/10/24.
-//
-
 import Foundation
 import Vapor
 
