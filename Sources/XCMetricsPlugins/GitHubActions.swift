@@ -20,6 +20,7 @@ public struct GitHubActionsPlugin {
                 "github_run_attempt": getEnv("GITHUB_RUN_ATTEMPT"),
                 "github_run_id": getEnv("GITHUB_RUN_ID"),
                 "github_workflow": getEnv("GITHUB_WORKFLOW"),
+                "github_is_nightly": getEnv("is_nightly"),
             ]
         })
     }
