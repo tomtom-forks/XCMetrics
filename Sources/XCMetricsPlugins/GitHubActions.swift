@@ -11,17 +11,17 @@ public struct GitHubActionsPlugin {
     }
     
     public func create() -> XCMetricsPlugin {
-        return XCMetricsPlugin(name: "Load Average", body: { _ -> [String : String] in
+        return XCMetricsPlugin(name: "GitHub Actions Environment", body: { _ -> [String : String] in
             guard !getEnv("CI").isEmpty else { return [:] }
             
-            return [
-                "github_job": getEnv("GITHUB_JOB"),
-                "github_repository": getEnv("GITHUB_REPOSITORY"),
-                "github_run_attempt": getEnv("GITHUB_RUN_ATTEMPT"),
-                "github_run_id": getEnv("GITHUB_RUN_ID"),
-                "github_workflow": getEnv("GITHUB_WORKFLOW"),
-                "github_is_nightly": getEnv("is_nightly"),
-            ]
+            var env = ProcessInfo.processInfo.environment
+            
+            // Convert keys to lowercase to preserve compatibility with old plugin versions
+            for key in env.keys {
+                env[key.lowercased()] = env.removeValue(forKey: key)
+            }
+            
+            return env
         })
     }
     
